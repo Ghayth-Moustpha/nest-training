@@ -1,20 +1,21 @@
-version: '3.8'  # Define the Docker Compose version
-
+version: "3.9"
 services:
-  db:
-    image: mysql:8.0  # Using the MySQL 8.0 image
-    container_name: mysql_container  # Set a meaningful container name
-    env_file:
-      - .env  # Reference your .env file
+  database:
+    image: postgres:15-alpine
+    container_name: prisma_database
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}  # Root password from .env
-      MYSQL_DATABASE: ${DATABASE_NAME}            # Database name from .env
-      MYSQL_USER: trilux                          # Directly set the username
-      MYSQL_PASSWORD: trilux                      # Directly set the user password
+      POSTGRES_USER: ${DB_USER}       # User defined in .env file
+      POSTGRES_PASSWORD: ${DB_PASSWORD} # Password from .env
+      POSTGRES_DB: ${DB_NAME}         # Database name from .env
     ports:
-      - "3306:3306"  # Map MySQL's port to your machine
+      - "5432:5432"                   # Map the PostgreSQL port to the host
     volumes:
-      - mysql_data:/var/lib/mysql  # Persist MySQL data
+      - database_data:/var/lib/postgresql/data # Persist data between restarts
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
-  mysql_data:  # Volume for MySQL data persistence
+  database_data:

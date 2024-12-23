@@ -19,7 +19,6 @@ export class UserService {
       data: {
         email,
         password: hashedPassword,
-        role: { connect: { name: 'Student' } }, // Ensure role "Student" exists in the Role table
         profile: { create: {} }, // Create an empty Profile record
         student: { create: {} }, // Create a Student record
         ...rest,
@@ -39,7 +38,6 @@ export class UserService {
       data: {
         email,
         password: hashedPassword,
-        role: { connect: { name: 'Admin' } }, // Ensure role "Admin" exists in the Role table
         profile: { create: {} }, // Create an empty Profile record
         admin: { create: {} }, // Create an Admin record
         ...rest,
@@ -59,7 +57,6 @@ export class UserService {
       data: {
         email,
         password: hashedPassword,
-        role: { connect: { name: 'Teacher' } }, // Ensure role "Teacher" exists in the Role table
         profile: { create: {} }, // Create an empty Profile record
         teacher: { create: {} }, // Create a Teacher record
         ...rest,

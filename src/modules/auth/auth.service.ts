@@ -17,22 +17,34 @@ export class AuthService {
 
     const user = await this.prisma.user.findUnique({
       where: { email },
-      include: { role: true },
+      include: {
+        admin: true,
+        teacher: true,
+        student: true,
+      },
     });
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
       throw new UnauthorizedException('Invalid email or password.');
     }
 
-    const payload = { sub: user.id, role: user.role.name };
+    const role = this.determineRole(user);
+    const payload = { sub: user.id, role };
     const token = this.jwtService.sign(payload, { expiresIn: '1h' });
 
     return {
       id: user.id,
-      name: `${user.fname} ${user.lname}`, // Assuming `fname` and `lname` exist
+      name: `${user.fname} ${user.lname}`,
       email: user.email,
-      role: user.role.name,
+      role,
       token,
     };
+  }
+
+  private determineRole(user: any): string {
+    if (user.admin) return 'admin';
+    if (user.teacher) return 'teacher';
+    if (user.student) return 'student';
+    return 'user'; 
   }
 }

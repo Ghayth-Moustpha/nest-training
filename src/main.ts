@@ -10,6 +10,6 @@ async function bootstrap() {
   app.useStaticAssets(path.join(__dirname, '..', 'uploads'), { prefix: '/uploads' });
 
   app.useGlobalPipes(new ValidationPipe());
-  await app.listen(3000);
+  await app.listen(3001);
 }
 bootstrap();
