@@ -1,31 +1,184 @@
+// prisma/schema.prisma
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "postgresql" 
   url      = env("DATABASE_URL")
 }
+
 model User {
-  id Int @id @default(autoincrement()) 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt 
+  id          Int       @id @default(autoincrement())
+  email       String    @unique
+  fname       String 
+  lname       String     
+  active      Boolean   @default(false) 
+  password    String
+  role        Role      @relation(fields: [roleId], references: [id])
+  profile     Profile?
+  admin       Admin?    @relation("AdminUser") // Add this relation
+  teacher     Teacher?  @relation("TeacherUser") // Add this relation
+  student     Student?  @relation("StudentUser") // Add this relation
 
-  email String 
-  hash String 
-  firstName String? 
-  lastName String? 
+  roleId      Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
+  @@map("users")
 }
 
-model Bookmark {
-  id Int @id @default(autoincrement()) 
-  createdAt DateTime @default(now()) 
-  updatedAt DateTime @updatedAt 
 
-  title String 
-  description String? 
-  link  String 
+model Profile {
+  id          Int       @id @default(autoincrement())
+  image       String?
+  bio         String?
+  user        User      @relation(fields: [userId], references: [id])
+  userId      Int       @unique
+}
 
+model Role {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  users       User[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("roles")
+}
+
+model Admin {
+  id          Int       @id @default(autoincrement())
+  userId      Int       @unique
+  user        User      @relation("AdminUser", fields: [userId], references: [id])
+  blogs       Blog[]    @relation("AdminBlogs") // Add this relation field
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("admins")
+}
+
+
+model Teacher {
+  id          Int       @id @default(autoincrement())
+  userId      Int       @unique
+  user        User      @relation("TeacherUser", fields: [userId], references: [id])
+  courses     Course[]
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("teachers")
+}
+
+model Student {
+  id          Int       @id @default(autoincrement())
+  userId      Int       @unique
+  user        User      @relation("StudentUser", fields: [userId], references: [id])
+  courses     CourseEnrollment[]
+  payments    Payment[]
+  assignments Assignment[]
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("students")
+}
+
+model Course {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String
+  teacherId   Int
+  teacher     Teacher   @relation(fields: [teacherId], references: [id])
+  materials   Material[]
+  assignments Assignment[]
+  enrollments CourseEnrollment[]
+  payments    Payment[]
+  imageUrl    String?   // New field for storing image URL
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("courses")
+}
+
+model Material {
+  id          Int       @id @default(autoincrement())
+  type        String    // (e.g., PDF, Video, Link)
+  url         String
+  courseId    Int
+  course      Course    @relation(fields: [courseId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("materials")
+}
+
+model Assignment {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String
+  deadline    DateTime
+  courseId    Int
+  course      Course    @relation(fields: [courseId], references: [id])
+  studentId   Int
+  student     Student   @relation(fields: [studentId], references: [id])
+  status      String    // (e.g., Submitted, Graded)
+  grade       Float?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("assignments")
+}
+
+model CourseEnrollment {
+  id          Int       @id @default(autoincrement())
+  courseId    Int
+  studentId   Int
+  course      Course    @relation(fields: [courseId], references: [id])
+  student     Student   @relation(fields: [studentId], references: [id])
+  createdAt   DateTime  @default(now())
+
+  @@unique([courseId, studentId])
+  @@map("course_enrollments")
+}
+
+model Payment {
+  id          Int       @id @default(autoincrement())
+  amount      Float
+  status      String    // (e.g., Pending, Completed, Failed)
+  method      String    // (e.g., Credit Card, PayPal)
+  courseId    Int
+  studentId   Int
+  course      Course    @relation(fields: [courseId], references: [id])
+  student     Student   @relation(fields: [studentId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("payments")
+}
+
+model Advertisement {
+  id          Int       @id @default(autoincrement())
+  title       String
+  content     String
+  url         String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("advertisements")
+}
+
+model Blog {
+  id          Int      @id @default(autoincrement())
+  title       String
+  content     String
+  author      Admin    @relation("AdminBlogs", fields: [adminId], references: [id]) // Specify the reverse relation name
+  adminId     Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("blogs")
 }
