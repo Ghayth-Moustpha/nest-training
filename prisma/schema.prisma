@@ -78,6 +78,7 @@ model Course {
   title       String
   description String
   teacherId   Int
+  cost        Int     @default(0)
   teacher     Teacher   @relation(fields: [teacherId], references: [id])
   materials   Material[]
   assignments Assignment[]

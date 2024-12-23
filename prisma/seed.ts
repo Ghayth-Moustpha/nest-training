@@ -26,7 +26,6 @@ async function main() {
     },
   });
 
-  // Create a Teacher User
 
  
 
