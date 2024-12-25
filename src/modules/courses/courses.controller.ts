@@ -1,31 +1,36 @@
-import { Controller, Post, Get, Param, Body, Patch, Delete, UploadedFile, UseInterceptors } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import {
+  Controller,
+  Post,
+  Get,
+  Param,
+  Body,
+  Patch,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { CourseService } from './courses.service';
-import { CreateCourseDto ,UpdateCourseDto } from './dto';
+import { CourseFiltersDto, CreateCourseDto, UpdateCourseDto } from './dto';
 
 @Controller('courses')
 export class CourseController {
   constructor(private readonly courseService: CourseService) {}
 
   @Post()
-  create(
-    @Body() createCourseDto: CreateCourseDto,
-  ) {
+  async create(@Body() createCourseDto: CreateCourseDto) {
     return this.courseService.create(createCourseDto);
   }
 
   @Get()
-  findAll() {
-    return this.courseService.findAll();
+  async findAll(@Query() filters: CourseFiltersDto) {
+    return this.courseService.findAll(filters);
   }
-
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     return this.courseService.findOne(+id);
   }
 
   @Patch(':id')
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updateCourseDto: UpdateCourseDto,
   ) {
@@ -33,7 +38,7 @@ export class CourseController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     return this.courseService.remove(+id);
   }
 }

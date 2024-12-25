@@ -1,23 +1,28 @@
-import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { IsString, IsNumber, IsOptional, IsArray, ArrayNotEmpty } from 'class-validator';
 
 export class CreateCourseDto {
-  @ApiProperty({ description: 'The title of the course' })
   @IsString()
-  @IsNotEmpty()
   title: string;
 
-  @ApiProperty({ description: 'A brief description of the course' })
   @IsString()
-  @IsNotEmpty()
   description: string;
 
-  @ApiProperty({ description: 'The ID of the teacher who is teaching the course' })
+  @IsNumber()
   teacherId: number;
 
-  @ApiProperty({ description: 'The course image file', type: 'string', format: 'binary', required: false })
-  imageUrl: string ; // Correct type for uploaded image file
+  @IsOptional()
+  @IsNumber()
+  cost?: number;
 
-  @ApiProperty({ description: 'The Cost in dollar' })
-  cost: number ;
+  @IsString()
+  @IsOptional()
+  type?: string;
+
+  @IsString()
+  @IsOptional()
+  imageUrl?: string;
+
+  @IsArray()
+  @ArrayNotEmpty()
+  categories: number[];
 }
