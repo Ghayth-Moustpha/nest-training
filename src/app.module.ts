@@ -5,10 +5,10 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { BookmarkModule } from './modules/bookmark/bookmark.module';
 import { CoursesModule } from './modules/courses/courses.module';
-import { FileUploadModule } from './file-upload/file-upload.module';
+import { FileUploadModule } from './modules/file-upload/file-upload.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-import { CategoryModule } from './category/category.module';
+import { CategoryModule } from './modules/category/category.module';
 
 @Module({
   imports: [AuthModule, CoursesModule, UserModule, BookmarkModule, FileUploadModule ,ServeStaticModule.forRoot({
