@@ -80,6 +80,8 @@ model Course {
   teacherId   Int
   cost        Int     @default(0)
   teacher     Teacher   @relation(fields: [teacherId], references: [id])
+  type        String    @default("Online") // Course type: Online, In-person, Hybrid
+  categories  CourseCategory[]
   materials   Material[]
   assignments Assignment[]
   enrollments CourseEnrollment[]
@@ -169,3 +171,24 @@ model Blog {
 
   @@map("blogs")
 }
+
+model Category {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  courses     CourseCategory[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("categories")
+}
+model CourseCategory {
+  id          Int       @id @default(autoincrement())
+  courseId    Int
+  categoryId  Int
+  course      Course    @relation(fields: [courseId], references: [id])
+  category    Category  @relation(fields: [categoryId], references: [id])
+
+  @@unique([courseId, categoryId]) // Ensure unique course-category pair
+  @@map("course_categories")
+}
+

@@ -17,12 +17,9 @@ export class UpdateCourseDto {
   @IsOptional()
   teacherId?: number;
 
-  @ApiProperty({ description: 'The URL of the image for the course', required: false })
-  @IsOptional()
-  @IsString()
-  imageUrl?: string; // Optional image URL
+
 
   @ApiProperty({ description: 'The course image file', type: 'string', format: 'binary', required: false })
   @IsOptional()
-  image?: Express.Multer.File; // Correct type for uploaded image file
+  imageUrl?: string ; // Correct type for uploaded image file
 }

@@ -5,9 +5,16 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { BookmarkModule } from './modules/bookmark/bookmark.module';
 import { CoursesModule } from './modules/courses/courses.module';
+import { FileUploadModule } from './file-upload/file-upload.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
+import { CategoryModule } from './category/category.module';
 
 @Module({
-  imports: [AuthModule, CoursesModule, UserModule, BookmarkModule ],
+  imports: [AuthModule, CoursesModule, UserModule, BookmarkModule, FileUploadModule ,ServeStaticModule.forRoot({
+    rootPath: join(__dirname, '..', 'uploads'), // Serve files from the uploads folder
+    serveRoot: '/uploads', // Serve files at the /uploads route
+  }), CategoryModule],
 
   controllers: [AppController],
   providers: [AppService],

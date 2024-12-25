@@ -7,13 +7,12 @@ import { UpdateCourseDto } from './dto/update-course.dto';
 export class CourseService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(createCourseDto: CreateCourseDto, imageFile?: Express.Multer.File) {
-    const imageUrl = imageFile ? `/uploads/${imageFile.filename}` : null;
+  async create(createCourseDto: CreateCourseDto) {
+  
 
     return this.prisma.course.create({
       data: {
-        ...createCourseDto,
-        imageUrl,
+    ...createCourseDto, 
       },
     });
   }
@@ -30,14 +29,10 @@ export class CourseService {
     return course;
   }
 
-  async update(id: number, updateCourseDto: UpdateCourseDto, imageFile?: Express.Multer.File) {
-    const existingCourse = await this.findOne(id);
-
-    const imageUrl = imageFile ? `/uploads/${imageFile.filename}` : existingCourse.imageUrl;
-
+  async update(id: number, updateCourseDto: UpdateCourseDto, ) {
     return this.prisma.course.update({
       where: { id },
-      data: { ...updateCourseDto, imageUrl },
+      data: { ...updateCourseDto },
     });
   }
 

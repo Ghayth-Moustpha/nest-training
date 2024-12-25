@@ -33,7 +33,7 @@ export class CourseResponseDto {
 
   @ApiProperty({
     description: 'The URL of the course image (if available)',
-    example: 'http://localhost:3000/uploads/unique-image-name.jpg',
+    example: 'files/unique-image-name.jpg',
   })
   imageUrl: string;
 
@@ -48,4 +48,8 @@ export class CourseResponseDto {
     example: '2024-12-23T12:00:00Z',
   })
   updatedAt: Date;
+
+  @ApiProperty({ description: 'The Cost in dollar' })
+  cost: number ;
+  
 }

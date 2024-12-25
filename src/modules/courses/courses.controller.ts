@@ -8,12 +8,10 @@ export class CourseController {
   constructor(private readonly courseService: CourseService) {}
 
   @Post()
-  @UseInterceptors(FileInterceptor('image'))
   create(
     @Body() createCourseDto: CreateCourseDto,
-    @UploadedFile() imageFile?: Express.Multer.File,
   ) {
-    return this.courseService.create(createCourseDto, imageFile);
+    return this.courseService.create(createCourseDto);
   }
 
   @Get()
@@ -27,13 +25,11 @@ export class CourseController {
   }
 
   @Patch(':id')
-  @UseInterceptors(FileInterceptor('image'))
   update(
     @Param('id') id: string,
     @Body() updateCourseDto: UpdateCourseDto,
-    @UploadedFile() imageFile?: Express.Multer.File,
   ) {
-    return this.courseService.update(+id, updateCourseDto, imageFile);
+    return this.courseService.update(+id, updateCourseDto);
   }
 
   @Delete(':id')
