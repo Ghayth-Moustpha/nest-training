@@ -9,12 +9,13 @@ import { FileUploadModule } from './modules/file-upload/file-upload.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { CategoryModule } from './modules/category/category.module';
+import { BlogModule } from './modules/blog/blog.module';
 
 @Module({
   imports: [AuthModule, CoursesModule, UserModule, BookmarkModule, FileUploadModule ,ServeStaticModule.forRoot({
     rootPath: join(__dirname, '..', 'uploads'), // Serve files from the uploads folder
     serveRoot: '/uploads', // Serve files at the /uploads route
-  }), CategoryModule],
+  }), CategoryModule, BlogModule],
 
   controllers: [AppController],
   providers: [AppService],

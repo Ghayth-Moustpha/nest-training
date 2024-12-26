@@ -2,6 +2,7 @@ import { Injectable, ConflictException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { RegisterStudentDto, CreateAdminDto, CreateTeacherDto } from './dto';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class UserService {
@@ -62,5 +63,17 @@ export class UserService {
         ...rest,
       },
     });
+  }
+
+
+  async findByemil(email: string): Promise<User | undefined> {
+    return this.prisma.user.findUnique({
+          where: { email },
+          include: {
+            admin: true,
+            teacher: true,
+            student: true,
+          },
+        });
   }
 }
