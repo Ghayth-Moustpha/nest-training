@@ -10,6 +10,9 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { CategoryModule } from './modules/category/category.module';
 import { BlogModule } from './modules/blog/blog.module';
+import { APP_GUARD } from '@nestjs/core';
+import { RoleGuard } from './guards/role.guard';
+import { AuthGuard } from './guards/auth.guard';
 
 @Module({
   imports: [AuthModule, CoursesModule, UserModule, BookmarkModule, FileUploadModule ,ServeStaticModule.forRoot({
@@ -18,6 +21,7 @@ import { BlogModule } from './modules/blog/blog.module';
   }), CategoryModule, BlogModule],
 
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService
+],
 })
 export class AppModule {}

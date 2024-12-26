@@ -6,6 +6,7 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { UserResponseDto } from './dto/user-response.dto';
 import { UserService } from '../user/user.service';
 import { User } from '@prisma/client';
+import { Role } from './roles.enum';
 
 @Injectable()
 export class AuthService {
@@ -46,20 +47,21 @@ export class AuthService {
         secret: process.env.JWT_SECRET,
       });
       const email  = payload.sub;  
-      const user = this.Userservice.findByemil(email) ;
+      const user = await this.Userservice.findByemil(email) ;
       if (!user) {
         throw new UnauthorizedException('User not found.');
       }
     return user ; 
+
   }catch (error) {
     throw new UnauthorizedException('Invalid or expired token.');
   } 
 
 }
-  public determineRole(user: any): string {
-    if (user.admin) return 'admin';
-    if (user.teacher) return 'teacher';
-    if (user.student) return 'student';
-    return 'user'; 
+  public determineRole(user: any): Role {
+    if (user.admin) return Role.Admin ;
+    if (user.teacher) return Role.Teacher;
+    if (user.student) return Role.Student;
+    
   }
 }

@@ -23,7 +23,7 @@ import {
   
       const request = context.switchToHttp().getRequest();
       const userRole = request.role;
-  
+      console.log (request.role) ; // => undefined 
       // Check if the user's role matches one of the required roles
       if (!requiredRoles.includes(userRole)) {
         throw new ForbiddenException(
