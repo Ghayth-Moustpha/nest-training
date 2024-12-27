@@ -31,10 +31,12 @@ export class AuthService {
       role };
     const token = this.jwtService.sign(payload, { expiresIn: '1h' });
     const userResponse = {
-      name: `${user.fname} ${user.lname}`,
-      email: user.email,
-      role,
-      token,
+      user: {
+        name: `${user.fname} ${user.lname}`,
+        email: user.email,
+        role,
+      } ,
+      token
     }
     return userResponse;
   };
