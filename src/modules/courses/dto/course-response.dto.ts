@@ -52,4 +52,6 @@ export class CourseResponseDto {
   @ApiProperty({ description: 'The Cost in dollar' })
   cost: number ;
   
+  startData: Date 
+  hours:number
 }

@@ -35,6 +35,8 @@ export class CourseController {
     return this.courseService.findOne(+id);
   }
 
+  @UseGuards(AuthGuard,RoleGuard) 
+  @Roles(Role.Admin)
   @Patch(':id')
   async update(
     @Param('id') id: string,
@@ -43,6 +45,9 @@ export class CourseController {
     return this.courseService.update(+id, updateCourseDto);
   }
 
+  @UseGuards(AuthGuard,RoleGuard) 
+  @Roles(Role.Admin)
+  @Patch(':id')
   @Delete(':id')
   async remove(@Param('id') id: string) {
     return this.courseService.remove(+id);
