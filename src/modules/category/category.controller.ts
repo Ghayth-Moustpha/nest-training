@@ -11,7 +11,6 @@ export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
   @UseGuards(AuthGuard,RoleGuard) 
   @Roles(Role.Admin)
-  @Patch(':id')
   @Post()
   async create(@Body() createCategoryDto: CreateCategoryDto) {
     return this.categoryService.create(createCategoryDto);

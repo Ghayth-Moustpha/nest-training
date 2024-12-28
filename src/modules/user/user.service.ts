@@ -1,7 +1,7 @@
 import { Injectable, ConflictException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
-import { RegisterStudentDto, CreateAdminDto, CreateTeacherDto } from './dto';
+import { RegisterStudentDto, CreateAdminDto } from './dto';
 import { User } from '@prisma/client';
 
 @Injectable()
@@ -46,24 +46,6 @@ export class UserService {
     });
   }
 
-  async createTeacher(data: CreateTeacherDto) {
-    const { email, password, ...rest } = data;
-
-    const existingUser = await this.prisma.user.findUnique({ where: { email } });
-    if (existingUser) throw new ConflictException('Email already exists.');
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    return this.prisma.user.create({
-      data: {
-        email,
-        password: hashedPassword,
-        profile: { create: {} }, // Create an empty Profile record
-        teacher: { create: {} }, // Create a Teacher record
-        ...rest,
-      },
-    });
-  }
 
 
   async findByemil(email: string): Promise<User | undefined> {

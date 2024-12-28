@@ -6,7 +6,6 @@ CREATE TABLE "users" (
     "lname" TEXT NOT NULL,
     "active" BOOLEAN NOT NULL DEFAULT false,
     "password" TEXT NOT NULL,
-    "roleId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -59,9 +58,14 @@ CREATE TABLE "courses" (
     "title" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "teacherId" INTEGER NOT NULL,
+    "cost" INTEGER NOT NULL DEFAULT 0,
+    "type" TEXT NOT NULL DEFAULT 'Online',
     "imageUrl" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "startData" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "hours" DOUBLE PRECISION NOT NULL DEFAULT 15,
+    "status" TEXT NOT NULL DEFAULT 'upcoming',
 
     CONSTRAINT "courses_pkey" PRIMARY KEY ("id")
 );
@@ -135,11 +139,33 @@ CREATE TABLE "blogs" (
     "id" SERIAL NOT NULL,
     "title" TEXT NOT NULL,
     "content" TEXT NOT NULL,
+    "imageURL" TEXT NOT NULL,
     "adminId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "blogs_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "categories" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "description" TEXT NOT NULL DEFAULT 'no description',
+    "imageURL" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "categories_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "course_categories" (
+    "id" SERIAL NOT NULL,
+    "courseId" INTEGER NOT NULL,
+    "categoryId" INTEGER NOT NULL,
+
+    CONSTRAINT "course_categories_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -159,6 +185,12 @@ CREATE UNIQUE INDEX "students_userId_key" ON "students"("userId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "course_enrollments_courseId_studentId_key" ON "course_enrollments"("courseId", "studentId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "categories_name_key" ON "categories"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "course_categories_courseId_categoryId_key" ON "course_categories"("courseId", "categoryId");
 
 -- AddForeignKey
 ALTER TABLE "Profile" ADD CONSTRAINT "Profile_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -198,3 +230,9 @@ ALTER TABLE "payments" ADD CONSTRAINT "payments_studentId_fkey" FOREIGN KEY ("st
 
 -- AddForeignKey
 ALTER TABLE "blogs" ADD CONSTRAINT "blogs_adminId_fkey" FOREIGN KEY ("adminId") REFERENCES "admins"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "course_categories" ADD CONSTRAINT "course_categories_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES "courses"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "course_categories" ADD CONSTRAINT "course_categories_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "categories"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

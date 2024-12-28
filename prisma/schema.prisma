@@ -54,7 +54,7 @@ model Teacher {
   courses     Course[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-
+  title       String    @default("Mr") 
   @@map("teachers")
 }
 
@@ -90,7 +90,7 @@ model Course {
   updatedAt   DateTime  @updatedAt
   startData   DateTime  @default(now()) 
   hours       Float     @default(15) 
-
+  status      String    @default ("upcoming") 
   @@map("courses")
 }
 
