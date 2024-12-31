@@ -88,7 +88,7 @@ model Course {
   imageUrl    String?   // New field for storing image URL
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-  startData   DateTime  @default(now()) 
+  startDate   DateTime  @default(now()) 
   hours       Float     @default(15) 
   status      String    @default ("upcoming") 
   @@map("courses")

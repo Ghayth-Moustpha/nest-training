@@ -1,4 +1,4 @@
-import { Controller, Post, UseInterceptors, UploadedFile, Get, Param, Res, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Post, UseInterceptors, UploadedFile, Get, Param, Res, HttpException, HttpStatus, UseGuards } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
 
@@ -6,9 +6,11 @@ import { diskStorage } from 'multer';
 import { v4 as uuidv4 } from 'uuid';
 import { extname, join } from 'path';
 import * as fs from 'fs';
+import { AuthGuard } from 'src/guards/auth.guard';
 
 @Controller('files')
 export class FileUploadController {
+  @UseGuards(AuthGuard)
   @Post('upload')
   @UseInterceptors(
     FileInterceptor('file', {

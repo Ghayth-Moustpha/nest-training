@@ -34,12 +34,11 @@ export class AuthGuard implements CanActivate {
         throw new UnauthorizedException('Invalid token');
       }
 
-      console.log('User:', user);
       request.user = user;
+   
 
       // Determine the role asynchronously (if applicable)
       const role = await this.authservice.determineRole(user);
-      console.log('Role:', role);
       request.role = role;
 
       return true;

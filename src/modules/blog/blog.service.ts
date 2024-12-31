@@ -1,42 +1,73 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
-import { Blog, Prisma } from '@prisma/client';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service'; // Ensure this service is created to interact with your Prisma client
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { UpdateBlogDto } from './dto/update-blog.dto';
 
 @Injectable()
 export class BlogService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
-  async createBlog(data: CreateBlogDto): Promise<Blog> {
-    return this.prisma.blog.create({
-      data,
+  // Create a new blog
+  async createBlog(createBlogDto: CreateBlogDto, adminId: number) {
+    return await this.prisma.blog.create({
+      data: {
+        ...createBlogDto,
+        adminId,
+      },
     });
   }
 
-  async getAllBlogs(): Promise<Blog[]> {
-    return this.prisma.blog.findMany({
-      include: { author: true },
+  // Get all blogs
+  async getAllBlogs() {
+    return await this.prisma.blog.findMany({
+      include: { author: true }, // Include the author details if needed
     });
   }
 
-  async getBlogById(id: number): Promise<Blog> {
-    return this.prisma.blog.findUnique({
+  // Get a blog by its ID
+  async getBlogById(id: number) {
+    const blog = await this.prisma.blog.findUnique({
       where: { id },
-      include: { author: true },
+      include: { author: true }, // Include the author details if needed
+    });
+
+    if (!blog) {
+      throw new NotFoundException(`Blog with ID ${id} not found`);
+    }
+
+    return blog;
+  }
+
+  // Update a blog by its ID
+  async updateBlog(id: number, updateBlogDto: UpdateBlogDto, adminId: number) {
+    const blog = await this.prisma.blog.findUnique({ where: { id } });
+
+    if (!blog) {
+      throw new NotFoundException(`Blog with ID ${id} not found`);
+    }
+
+    if (blog.adminId !== adminId) {
+      throw new UnauthorizedException('You are not authorized to update this blog');
+    }
+
+    return await this.prisma.blog.update({
+      where: { id },
+      data: { ...updateBlogDto },
     });
   }
 
-  async updateBlog(id: number, data: UpdateBlogDto): Promise<Blog> {
-    return this.prisma.blog.update({
-      where: { id },
-      data,
-    });
-  }
+  // Delete a blog by its ID
+  async deleteBlog(id: number, adminId: number) {
+    const blog = await this.prisma.blog.findUnique({ where: { id } });
 
-  async deleteBlog(id: number): Promise<Blog> {
-    return this.prisma.blog.delete({
-      where: { id },
-    });
+    if (!blog) {
+      throw new NotFoundException(`Blog with ID ${id} not found`);
+    }
+
+    if (blog.adminId !== adminId) {
+      throw new UnauthorizedException('You are not authorized to delete this blog');
+    }
+
+    return await this.prisma.blog.delete({ where: { id } });
   }
 }

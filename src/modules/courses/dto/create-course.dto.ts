@@ -26,6 +26,6 @@ export class CreateCourseDto {
   @ArrayNotEmpty()
   categories: number[];
 
-  startData: Date 
+  startDate: Date 
   hours:number
 }

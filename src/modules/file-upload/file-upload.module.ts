@@ -3,6 +3,7 @@ import { FileUploadService } from './file-upload.service';
 import { FileUploadController } from './file-upload.controller';
 import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { AuthModule } from '../auth/auth.module';
 @Module({
   imports: [
     MulterModule.register({
@@ -13,7 +14,7 @@ import { diskStorage } from 'multer';
           cb(null, filename);
         },
       }),
-    }),
+    }),AuthModule
   ],
   controllers: [FileUploadController],
   providers: [FileUploadService],

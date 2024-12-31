@@ -81,12 +81,7 @@ export class CourseService {
       where: { id },
       data: {
         ...courseData,
-        ...(categories && {
-          categories: {
-            deleteMany: {}, // Clear old categories
-            create: categories.map((categoryId) => ({ categoryId })),
-          },
-        }),
+       
       },
       include: {
         categories: true,

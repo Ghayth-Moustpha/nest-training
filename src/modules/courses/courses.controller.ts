@@ -8,6 +8,7 @@ import {
   Delete,
   Query,
   UseGuards,
+  Put,
 } from '@nestjs/common';
 import { CourseService } from './courses.service';
 import { CourseFiltersDto, CreateCourseDto, UpdateCourseDto } from './dto';
@@ -37,7 +38,7 @@ export class CourseController {
 
   @UseGuards(AuthGuard,RoleGuard) 
   @Roles(Role.Admin)
-  @Patch(':id')
+  @Put(':id')
   async update(
     @Param('id') id: string,
     @Body() updateCourseDto: UpdateCourseDto,
