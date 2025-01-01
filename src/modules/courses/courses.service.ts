@@ -51,6 +51,7 @@ export class CourseService {
             category: true,
           },
         },
+        teacher : true 
       },
     });
   }
