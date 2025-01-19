@@ -3,7 +3,7 @@ export interface Consultation {
     name: string;
     email: string;
     phone: string;
-    date: Date;
+    date?: Date;
     message?: string; 
 
   }

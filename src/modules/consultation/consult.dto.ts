@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import { IsDate, IsEmail, IsOptional, IsString } from 'class-validator';
 
 export class ConsultDto {
@@ -13,6 +14,6 @@ export class ConsultDto {
     @IsString() // Uncomment if you want to validate date as well
     message?: string; 
 
-    @IsDate() // Uncomment if you want to validate date as well
-    date: Date; 
+    @Type(() => Date) // Converts strings to Date objects
+    date?: Date; 
 }
